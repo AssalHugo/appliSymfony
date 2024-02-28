@@ -21,11 +21,24 @@ class ProduitRepository extends ServiceEntityRepository
         parent::__construct($registry, Produit::class);
     }
 
+    /**
+     * Méthode qui retourne tout les produits dans l'ordre
+     */
     public function orderingProduit() {
 
         $listeProduits = $this->getEntityManager()->createQuery("Select p from App\Entity\Produit p ORDER BY p.id DESC")->getResult();
 
         return $listeProduits;
+    }
+
+    /**
+     * Retourne le dernier produit
+     */
+    public function getLastProduit() {
+
+        $lastProduit = $this->createQueryBuilder('p')->orderBy('p.id', 'DESC')->setMaxResults(1)->getQuery()->getOneOrNullResult();
+
+        return $lastProduit;
     }
 
     //    /**
