@@ -21,6 +21,13 @@ class ProduitRepository extends ServiceEntityRepository
         parent::__construct($registry, Produit::class);
     }
 
+    public function orderingProduit() {
+
+        $listeProduits = $this->getEntityManager()->createQuery("Select p from App\Entity\Produit p ORDER BY p.id DESC")->getResult();
+
+        return $listeProduits;
+    }
+
     //    /**
     //     * @return Produit[] Returns an array of Produit objects
     //     */
