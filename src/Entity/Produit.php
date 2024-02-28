@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
@@ -27,6 +29,17 @@ class Produit
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lienImage = null;
+
+    #[ORM\OneToOne(targetEntity:Reference::class,cascade:["persist"])]
+    private $reference = null;
+
+    #[ORM\ManyToMany(targetEntity:Distributeur::class,cascade:["persist"])]
+    private $distributeurs = null;
+
+    public function __construct()
+    {
+        $this->distributeurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +102,42 @@ class Produit
     public function setLienImage(?string $lienImage): static
     {
         $this->lienImage = $lienImage;
+
+        return $this;
+    }
+
+    public function getReference(): ?Reference
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?Reference $reference): static
+    {
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Distributeur>
+     */
+    public function getDistributeurs(): Collection
+    {
+        return $this->distributeurs;
+    }
+
+    public function addDistributeur(Distributeur $distributeur): static
+    {
+        if (!$this->distributeurs->contains($distributeur)) {
+            $this->distributeurs->add($distributeur);
+        }
+
+        return $this;
+    }
+
+    public function removeDistributeur(Distributeur $distributeur): static
+    {
+        $this->distributeurs->removeElement($distributeur);
 
         return $this;
     }
