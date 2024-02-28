@@ -31,6 +31,16 @@ class ProduitRepository extends ServiceEntityRepository
         return $listeProduits;
     }
 
+        /**
+     * Méthode qui retourne tout les produits dans l'ordre
+     */
+    public function orderingProduitSQL() {
+
+        $listeProduits = $this->getEntityManager()->getConnection()->prepare("Select * from produit Order By id DESC")->executeQuery()->fetchAllAssociative();
+
+        return $listeProduits;
+    }
+
     /**
      * Retourne le dernier produit
      */
