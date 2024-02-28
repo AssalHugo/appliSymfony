@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CHART{% endblock %}
+
+{% block body %}
+<h1>Page du graphique</h1>
+
+
+<div class="w-25 h-25" >
+    {{ render_chart(chart) }}
+</div>
+
+{% endblock %}

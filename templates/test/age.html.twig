@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{%if age > 60%}
+
+<h3>Vous avez plus de 60</h3>
+
+{% else %}
+
+<h3>Vous avez moins de 60</h3>
+
+{% endif %}
+
+
+{% endblock %}

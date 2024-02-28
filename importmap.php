@@ -27,4 +27,19 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+    'chart.js/auto' => [
+        'version' => '3.9.1',
+    ],
+    'react' => [
+        'version' => '18.2.0',
+    ],
+    'react-dom' => [
+        'version' => '18.2.0',
+    ],
+    'scheduler' => [
+        'version' => '0.23.0',
+    ],
+    '@symfony/ux-react' => [
+        'path' => './vendor/symfony/ux-react/assets/dist/loader.js',
+    ],
 ];

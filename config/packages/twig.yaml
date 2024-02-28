@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    globals : 
+        auteur : '%env(APP_AUTHOR)%'
 
 when@test:
     twig:
