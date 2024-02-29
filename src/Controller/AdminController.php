@@ -44,6 +44,10 @@ class AdminController extends AbstractController
 
                 $entityManager->flush();
 
+                $session = $request->getSession();
+                $session->getFlashBag()->add('message', 'un nouveau produit a été ajouté');
+                $session->set('statut', 'success');
+
                 return $this->redirect($this->generateUrl('liste'));
             }
             else{
@@ -60,9 +64,48 @@ class AdminController extends AbstractController
     }
 
     #[Route("/update/{id}", name:"update")]
-    public function update(Request $request, $id){
+    public function update(Request $request, $id, EntityManagerInterface $entityManager){
 
-        return $this->render('Admin/create.html.twig');
+        $produitRepo = $entityManager->getRepository(Produit::class);
+        $produit = $produitRepo->find($id);
+
+        $img = $produit->getLienImage();
+        
+        $formProduit = $this->createForm(ProduitType::class,$produit);
+
+        $formProduit->add('creer', SubmitType::class, ['label' => 'Mise à jour d\'un produit']);
+
+        $formProduit->handleRequest($request);
+
+        if($request->isMethod('POST') && $formProduit->isValid()){
+
+            $file = $formProduit['lienImage']->getData();
+
+            //si une image est donnée
+            if (!is_string($file)){
+
+                $filename = $file->getClientOriginalName();
+                $file->move($this->getParameter('images_directory'), $filename);
+
+                $produit->setLienImage($filename);
+            }
+            else{
+
+                $produit->setLienImage($img);
+            }    
+
+                $entityManager->persist($produit);
+
+                $entityManager->flush();
+
+                $session = $request->getSession();
+                $session->getFlashBag()->add('message', 'Le produit a été mis à jour');
+                $session->set('statut', 'success');
+
+                return $this->redirect($this->generateUrl('liste'));
+        }
+
+        return $this->render('Admin/create.html.twig', ['my_form' => $formProduit->createView()]);
     }
 
     #[Route("/delete/{id}", name:"delete")]

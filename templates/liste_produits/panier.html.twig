@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des produits{% endblock %}
+
+{% block body %}
+
+
+    <table class="table table-hover">
+         <thead>
+            <tr>
+                <th scope="col">id_produit</th>
+                <th scope="col">Nombres de produits</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pan in panier %}
+            <tr>
+                <th scope="row">{{pan.nomproduit}}</th>
+                <td>{{pan.nbproduit}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

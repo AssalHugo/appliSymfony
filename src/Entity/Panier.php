@@ -31,6 +31,11 @@ class Panier
         return $this->id_produit;
     }
 
+    public function getNomProduit(): ?string
+    {
+        return $this->id_produit->getNom();
+    }
+
     public function setIdProduit(Produit $id_produit): static
     {
         $this->id_produit = $id_produit;

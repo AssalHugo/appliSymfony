@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -41,13 +42,23 @@ class ListeProduitsController extends AbstractController
     }
 
     #[Route('/ajoutPanier/{id}', name: 'ajoutPanier')]
-    public function ajoutPanier(EntityManagerInterface $entityManager, $id) : Response {
+    public function ajoutPanier(Request $request, EntityManagerInterface $entityManager, $id) : Response {
 
         $panierRepo = $entityManager->getRepository(Panier::class);
         $produitRepo = $entityManager->getRepository(Produit::class);
 
         $panierEle = $panierRepo->findOneBy(['id_produit' => $id]);
         $produitEle = $produitRepo->find($id);
+
+        //Si le produit 
+        if ($produitEle->isRupture() == true){
+
+            $session = $request->getSession();
+            $session->getFlashBag()->add('message', 'Impossible d\'ajouter un produit en rupture de stock');
+            $session->set('statut', 'danger');
+
+            return $this->redirect($this->generateUrl('liste'));
+        }
 
         if ($panierEle != null){
 
@@ -67,6 +78,23 @@ class ListeProduitsController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->redirect($this->generateUrl('liste'));
+
+        $panierRepo = $entityManager->getRepository(Panier::class);
+        $panier = $panierRepo->findAll();
+        
+        return $this->render('liste_produits/panier.html.twig', [
+            'panier' => $panier,
+        ]);
+    }
+
+    #[Route('/panier', name: 'panier')]
+    public function panier(EntityManagerInterface $entityManager){
+
+        $panierRepo = $entityManager->getRepository(Panier::class);
+        $panier = $panierRepo->findAll();
+
+        return $this->render('liste_produits/panier.html.twig', [
+            'panier' => $panier,
+        ]);
     }
 }
