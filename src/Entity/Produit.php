@@ -33,7 +33,7 @@ class Produit
     #[ORM\OneToOne(targetEntity:Reference::class,cascade:["persist"])]
     private $reference = null;
 
-    #[ORM\ManyToMany(targetEntity:Distributeur::class,cascade:["persist"])]
+    #[ORM\ManyToMany(targetEntity:Distributeur::class,cascade:["persist"], inversedBy:'produits')]
     private $distributeurs = null;
 
     public function __construct()
@@ -130,6 +130,9 @@ class Produit
     {
         if (!$this->distributeurs->contains($distributeur)) {
             $this->distributeurs->add($distributeur);
+
+            //relation inverse obligé d'utilisé cette fonction et pas celle dans distributeur
+            $distributeur->addProduit($this);
         }
 
         return $this;
