@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Produit;
 use App\Entity\Distributeur;
+use App\Entity\Panier;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ListeProduitsController extends AbstractController
@@ -37,5 +38,35 @@ class ListeProduitsController extends AbstractController
         return $this->render('liste_produits/distributeurs.html.twig', [
             'distributeurs' => $distributeurs,
         ]);
+    }
+
+    #[Route('/ajoutPanier/{id}', name: 'ajoutPanier')]
+    public function ajoutPanier(EntityManagerInterface $entityManager, $id) : Response {
+
+        $panierRepo = $entityManager->getRepository(Panier::class);
+        $produitRepo = $entityManager->getRepository(Produit::class);
+
+        $panierEle = $panierRepo->findOneBy(['id_produit' => $id]);
+        $produitEle = $produitRepo->find($id);
+
+        if ($panierEle != null){
+
+            $panierEle->setNbProduit($panierEle->getNbProduit() + 1);
+            $produitEle->setQuantite($produitEle->getQuantite() - 1);
+        }
+        else{
+
+            $panier = new Panier();
+
+            $panier->setIdProduit($produitEle);
+            $panier->setNbProduit(1);
+            $produitEle->setQuantite($produitEle->getQuantite() - 1);
+
+            $entityManager->persist($panier);
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($this->generateUrl('liste'));
     }
 }

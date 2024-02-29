@@ -2,6 +2,7 @@ twig:
     file_name_pattern: '*.twig'
     globals : 
         auteur : '%env(APP_AUTHOR)%'
+    form_themes: ['bootstrap_5_layout.html.twig']
 
 when@test:
     twig:

@@ -12,21 +12,51 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Entity\Produit;
 use App\Form\ProduitType;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class AdminController extends AbstractController
 {
     #[Route('/insert', name: 'app_admin')]
-    public function insert(Request $request): Response
+    public function insert(Request $request, EntityManagerInterface $entityManager): Response
     {
 
-        $form = $this->createFormBuilder(null, ['action' => '/insert', 'method' => 'POST',])->add('nom', TextType::class)->add('date', DateType::class)->add('save', SubmitType::class, ['label' => 'Insérer un produit'])->getForm();
+        $produit = new Produit();
+        $formProduit = $this->createForm(ProduitType::class,$produit);
 
-        if($request->isMethod('POST')){
+        $formProduit->add('creer', SubmitType::class, ['label' => 'Insertion d\'un produit']);
 
-            return new JsonResponse($request->request->all());
+        $formProduit->handleRequest($request);
+
+        if($request->isMethod('POST') && $formProduit->isValid()){
+
+            $file = $formProduit['lienImage']->getData();
+
+            //si une image est donnée
+            if (!is_string($file)){
+
+                $filename = $file->getClientOriginalName();
+                $file->move($this->getParameter('images_directory'), $filename);
+
+                $produit->setLienImage($filename);
+
+                $entityManager->persist($produit);
+
+                $entityManager->flush();
+
+                return $this->redirect($this->generateUrl('liste'));
+            }
+            else{
+
+                $session = $request->getSession();
+                $session->getFlashBag()->add('message', 'Vous devez choisir une image pour le produit');
+                $session->set('statut', 'danger');
+
+                return $this->redirect($this->generateUrl('app_admin'));
+            }
         }
 
-        return $this->render('Admin/create.html.twig', ['my_form' => $form->createView()]);
+        return $this->render('Admin/create.html.twig', ['my_form' => $formProduit->createView()]);
     }
 
     #[Route("/update/{id}", name:"update")]
