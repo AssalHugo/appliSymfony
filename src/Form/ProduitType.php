@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Distributeur;
 use App\Form\ReferenceType;
+use App\Form\DistributeurType;
 use App\Entity\Produit;
 use App\Entity\Reference;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -14,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 
 class ProduitType extends AbstractType
@@ -29,13 +31,13 @@ class ProduitType extends AbstractType
             ->add('reference', ReferenceType::class, [
                 'label' => 'Référence du produit',
                 "required" => false,
-            ]);/*
-            ->add('distributeurs', EntityType::class, [
-                'class' => Distributeur::class,
-'choice_label' => 'id',
-'multiple' => true,
             ])
-        ;*/
+            ->add('distributeurs', CollectionType::class, [
+                'entry_type' => DistributeurType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' =>false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

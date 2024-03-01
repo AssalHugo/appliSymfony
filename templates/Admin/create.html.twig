@@ -34,10 +34,40 @@
             {{form_widget(my_form.lienImage, {'attr': {'class':'form-control'}})}}
             {{form_errors(my_form.lienImage)}}
         </div>
-        <div class="form-group">
+        <div class="form-group mt-3">
             {{form_label(my_form.reference.numero)}}
             {{form_widget(my_form.reference.numero, {'attr': {'class':'form-control'}})}}
             {{form_errors(my_form.reference.numero)}}
+        </div>
+        <div class="form-group mt-3">
+            {{form_label(my_form.distributeurs)}}
+            {{form_widget(my_form.distributeurs)}}
+            {{form_errors(my_form.distributeurs)}}
+        </div>
+        <div {{ stimulus_controller('form-collection') }}
+        data-form-collection-index-value="{{ my_form.distributeurs|length > 0 ? my_form.distributeurs|last.vars.name + 1 : 0 }}"
+        >
+            <ul id="collectionContainer"></ul>
+            <button type="button" id="addDistrib">Ajouter un distributeur</button>
+            <script>
+class FormCollectionController {
+    constructor() {
+        this.collectionContainer = document.getElementById("collectionContainer");
+        this.index = 0;
+        this.prototype = '<li>Prototype Element</li>';
+    }
+
+    addCollectionElement(event) {
+        const item = document.createElement('li');
+        item.innerHTML = this.prototype.replace(/__name__/g, this.index);
+        this.collectionContainer.appendChild(item);
+        this.index++;
+    }
+}
+
+// Instanciation et gestion des événements
+const controller = new FormCollectionController();
+document.getElementById("addDistrib").addEventListener('click', (event) => controller.addCollectionElement(event));</script>
         </div>
         <div class="mt-3">{{form_row(my_form.creer, {'attr':{'class':'btn btn-info'}})}}</div>
         </div>    
