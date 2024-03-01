@@ -37,7 +37,9 @@
                     </ul>
                     <div class=",card-body">
                         <a href="{{path('ajoutPanier', {id: produit.id}) }}" class="btn btn-primary">Ajouter au Panier</a>
-                    </div>        
+                        <a href="{{path('update', {id: produit.id}) }}" class="btn btn-warning mt-2">Editer le produit</a>
+                        <a href="{{path('delete', {id: produit.id}) }}" class="btn btn-danger mt-2">Supprimer le produit</a>
+                    </div>
                     </div>
             </div>
         {% endfor %}

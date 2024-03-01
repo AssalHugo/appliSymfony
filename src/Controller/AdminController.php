@@ -92,7 +92,7 @@ class AdminController extends AbstractController
             else{
 
                 $produit->setLienImage($img);
-            }    
+            }
 
                 $entityManager->persist($produit);
 
@@ -109,8 +109,17 @@ class AdminController extends AbstractController
     }
 
     #[Route("/delete/{id}", name:"delete")]
-    public function delete(Request $request, $id){
+    public function delete(Request $request, $id, EntityManagerInterface $entityManager){
 
-        
+        $produitRepo = $entityManager->getRepository(Produit::class);
+        $produit = $produitRepo->find($id);
+        $entityManager->remove($produit);
+        $entityManager->flush();
+
+        $session = $request->getSession();
+        $session->getFlashBag()->add('message', 'Le produit a été supprimé');
+        $session->set('statut', 'success');
+
+        return $this->redirect($this->generateUrl('liste'));
     }
 }
