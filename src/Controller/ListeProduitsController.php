@@ -97,4 +97,23 @@ class ListeProduitsController extends AbstractController
             'panier' => $panier,
         ]);
     }
+    
+    #[Route('/viderPanier', name: 'viderPanier')]
+    public function viderPanier(EntityManagerInterface $entityManager)
+    {
+        $panierRepo = $entityManager->getRepository(Panier::class);
+        $panierItems = $panierRepo->findAll();
+
+        foreach ($panierItems as $panierItem) {
+            $produit = $panierItem->getIdProduit();
+            $quantite = $panierItem->getNbProduit();
+            $produit->setQuantite($produit->getQuantite() + $quantite);
+            $entityManager->remove($panierItem);
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('panier');
+        
+    }
 }

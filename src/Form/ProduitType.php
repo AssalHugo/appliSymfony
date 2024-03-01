@@ -32,11 +32,12 @@ class ProduitType extends AbstractType
                 'label' => 'Référence du produit',
                 "required" => false,
             ])
-            ->add('distributeurs', CollectionType::class, [
-                'entry_type' => DistributeurType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' =>false,
+            ->add('distributeurs', EntityType::class, [
+                'class' => Distributeur::class,
+                'choice_label' => 'nom',
+                'label' => 'Selection des distributeurs',
+                'multiple' => true,
+                'required' => false,
             ]);
     }
 

@@ -26,7 +26,7 @@ class Panier
         return $this->id;
     }
 
-    public function getIdProduit(): ?int
+    public function getIdProduit(): ?Produit
     {
         return $this->id_produit;
     }

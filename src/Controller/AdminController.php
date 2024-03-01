@@ -24,7 +24,7 @@ class AdminController extends AbstractController
         $produit = new Produit();
         $formProduit = $this->createForm(ProduitType::class,$produit);
 
-        $formProduit->add('creer', SubmitType::class, ['label' => 'Insertion d\'un produit']);
+        $formProduit->add('creer', SubmitType::class, ['label' => 'Insertion d\'un produit', 'validation_groups' => ['registration','all']]);
 
         $formProduit->handleRequest($request);
 
@@ -73,7 +73,7 @@ class AdminController extends AbstractController
         
         $formProduit = $this->createForm(ProduitType::class,$produit);
 
-        $formProduit->add('creer', SubmitType::class, ['label' => 'Mise à jour d\'un produit']);
+        $formProduit->add('creer', SubmitType::class, ['label' => 'Mise à jour d\'un produit', 'validation_groups' => ['all']]);
 
         $formProduit->handleRequest($request);
 

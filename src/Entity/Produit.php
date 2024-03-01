@@ -7,7 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ProduitRepository::class)]
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+#[ORM\Entity(repositoryClass: ProduitRepository::class), UniqueEntity(fields:"nom", message: "erreur produit déjà existant dans la base")]
 class Produit
 {
     #[ORM\Id]
@@ -16,6 +20,13 @@ class Produit
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+        #[Assert\Length(
+            min: 2,
+            max: 50,
+            minMessage: 'Votre nom doit faire au moins {{ limit }} caractères',
+            maxMessage: 'Votre nom ne doit pas dépasser {{ limit }} caractères',
+            groups: ["all"]
+        )]
     private ?string $nom = null;
 
     #[ORM\Column]
@@ -41,6 +52,30 @@ class Produit
         $this->distributeurs = new ArrayCollection();
     }
 
+    #[Assert\IsTrue(message: "Erreur valeurs négatives sur le prix ou la quantité")]
+    public function isPrixQuantiteValid(){
+
+        if (is_float($this->getPrix()) && is_int($this->getQuantite()) && $this->getPrix() > 0 && $this->getQuantite() > 0){
+
+            return true;
+        }
+        else{
+
+            return false;
+        }
+    }
+
+    #[Assert\Callback()]
+    public function isContentValid(ExecutionContextInterface $context){
+
+        $forbiddenWords = ['arme', 'drogue'];
+
+        if (preg_match('#' . implode('|',$forbiddenWords) . '#i', $this->getNom())){
+
+            $context->buildViolation('Le produit est interdit à la vente')->atPath('produit')->addViolation();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,7 +86,7 @@ class Produit
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
 
