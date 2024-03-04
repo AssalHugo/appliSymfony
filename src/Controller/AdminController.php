@@ -13,8 +13,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Entity\Produit;
 use App\Form\ProduitType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 #[Route("/admin")]
+#[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
     #[Route('/insert', name: 'app_admin')]

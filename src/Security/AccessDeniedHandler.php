@@ -12,7 +12,6 @@ class AccessDeniedHandler extends AbstractController implements AccessDeniedHand
 
     public function handle(Request $request, AccessDeniedException $accessDeniedException) : Response{
 
-
         $session = $request->getSession();
         $session->getFlashBag()->add('message','Vous n\'avez pas les droits pour accéder à cette page');
         $session->set('statut','danger');
