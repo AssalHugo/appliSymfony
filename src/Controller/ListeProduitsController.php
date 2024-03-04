@@ -10,6 +10,8 @@ use App\Entity\Produit;
 use App\Entity\Distributeur;
 use App\Entity\Panier;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class ListeProduitsController extends AbstractController
 {
@@ -42,6 +44,7 @@ class ListeProduitsController extends AbstractController
     }
 
     #[Route('/ajoutPanier/{id}', name: 'ajoutPanier')]
+    #[IsGranted('ROLE_ADMIN')]
     public function ajoutPanier(Request $request, EntityManagerInterface $entityManager, $id) : Response {
 
         $panierRepo = $entityManager->getRepository(Panier::class);
@@ -88,6 +91,7 @@ class ListeProduitsController extends AbstractController
     }
 
     #[Route('/panier', name: 'panier')]
+    #[IsGranted('ROLE_ADMIN')]
     public function panier(EntityManagerInterface $entityManager){
 
         $panierRepo = $entityManager->getRepository(Panier::class);
@@ -99,6 +103,7 @@ class ListeProduitsController extends AbstractController
     }
     
     #[Route('/viderPanier', name: 'viderPanier')]
+    #[IsGranted('ROLE_ADMIN')]
     public function viderPanier(EntityManagerInterface $entityManager)
     {
         $panierRepo = $entityManager->getRepository(Panier::class);

@@ -16,11 +16,16 @@
 <button>
     <a href="{{path('app_admin')}}" title="vers app_admin">Vers le Formulaire</a>
 </button>
+{% if is_granted('ROLE_ADMIN') %}
 <button>
     <a href="{{path('panier')}}" title="vers le panier">Vers le panier</a>
 </button>
+{% endif %}
 <button>
     <a href="{{path('register')}}" title="Enregistrement d'un Utilisateur">Vers l'enregistrement d'un Utilisateur</a>
+</button>
+<button>
+    <a href="{{path('app_login')}}" title="Connexion d'un Utilisateur">Vers la connexion d'un Utilisateur</a>
 </button>
 <p>
     Posté par {{auteur}} le

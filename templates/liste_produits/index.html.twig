@@ -5,8 +5,14 @@
 {% block body %}
 
     <div class="alert alert-primary">Réduction 20% sur le produit : {{lastProduit.nom}}</div>
+    
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{path('app_admin')}}" class="btn btn-success mt-2">Ajouter un produit</a>
+    {% endif %}
 
     <div class="d-flex dlex-row justify-content-around flex-wrap">
+
+        
 
         {% for produit in listeProduits %}
             <div class=",card" style="width: 18rem;">
@@ -35,12 +41,15 @@
                             {% endif %}
                         </li>        
                     </ul>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <div class=",card-body">
                         <a href="{{path('ajoutPanier', {id: produit.id}) }}" class="btn btn-primary">Ajouter au Panier</a>
                         <a href="{{path('update', {id: produit.id}) }}" class="btn btn-warning mt-2">Editer le produit</a>
                         <a href="{{path('delete', {id: produit.id}) }}" class="btn btn-danger mt-2">Supprimer le produit</a>
                     </div>
+                    {% endif %}
                     </div>
+                    
             </div>
         {% endfor %}
     </div>
