@@ -14,7 +14,7 @@ use App\Entity\Produit;
 use App\Form\ProduitType;
 use Doctrine\ORM\EntityManagerInterface;
 
-
+#[Route("/admin")]
 class AdminController extends AbstractController
 {
     #[Route('/insert', name: 'app_admin')]

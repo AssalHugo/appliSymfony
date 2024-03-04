@@ -92,7 +92,7 @@ class ListeProduitsController extends AbstractController
 
         $panierRepo = $entityManager->getRepository(Panier::class);
         $panier = $panierRepo->findAll();
-
+        
         return $this->render('liste_produits/panier.html.twig', [
             'panier' => $panier,
         ]);
