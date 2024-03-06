@@ -35,9 +35,6 @@ class ChartController extends AbstractController
                 ]
             ]
                 ]);
-
-
-        var_dump($chart);
             
 
 
